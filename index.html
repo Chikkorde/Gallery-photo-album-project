@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    
+
+ <style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.image-box {
+  width: 25%;
+  text-align: center;
+  position: relative;
+}
+
+.form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.display-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+input[type="text"] {
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid gray;
+  border-radius: 4px;
+}
+
+button {
+  width: 20%;
+  background-color: green;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-box">
+          <img src="https://picsum.photos/id/237/200/300" id="img1">
+          <form id="form1" class="form">
+            <input type="text" placeholder="Name" id="name">
+            <input type="text" placeholder="Email" id="email">
+            <input type="text" placeholder="Username" id="username">
+            <button id="submit">Submit</button>
+          </form>
+        </div>
+        <div class="image-box">
+          <img src="https://picsum.photos/seed/picsum/200/300" id="img2">
+          <div id="display-info" class="display-info">
+          </div>
+        </div>
+        <div class="image-box">
+          <img src="https://picsum.photos/200/300?grayscale" id="img3">
+        </div>
+        <div class="image-box">
+          <img src="https://picsum.photos/200/300/" id="img4" onclick="generateCoupon()">
+        </div>
+      </div>
+      
+    
+<script>
+    
+    document.getElementById("img1").addEventListener("click", function() {
+  document.getElementById("form1").style.display = "block";
+});
+
+document.getElementById("submit").addEventListener("click", function() {
+  event.preventDefault();
+  var name = document.getElementById("name").value;
+  var username = document.getElementById("username").value;
+  document.getElementById("display-info").innerHTML =
+    "<p>Name: " + name + "</p>" + "<p>Username: " + username + "</p>";
+});
+
+document.getElementById("img2").addEventListener("click", function() {
+  document.getElementById("display-info").style.display = "block";
+});
+
+</script>
+
+
+<div id="diceContainer" style="display:none;">
+  <img id="dice" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROmipK7Lv9QsCTJjy9lAC0LNFQVZLXZmgKZLVgNzVx7A&s">
+  <p id="prompt"></p>
+</div>
+
+
+
+
+
+<script>
+let img3Clicked = false;
+let diceClicked = 0;
+let diceSum = 0;
+
+document.getElementById("img3").addEventListener("click", function() {
+  if (!img3Clicked) {
+    document.getElementById("diceContainer").style.display = "block";
+    img3Clicked = true;
+document.getElementById("dice").addEventListener("click", function() {
+ 
+        if (diceClicked < 3) {
+        let randomNumber = Math.floor(Math.random() * 6) + 1;
+        diceSum += randomNumber;
+        diceClicked++;
+        if (diceClicked === 3) {
+          if (diceSum > 10) {
+            document.getElementById("img4").style.pointerEvents = "auto";
+          } else {
+            document.getElementById("prompt").innerHTML = "Try again after scoring more than 10";
+          }
+        }
+      }
+    });
+  }
+});
+
+
+</script>
+
+
+<script>
+  function generateCoupon() {
+    var coupon = '';
+    for (var i = 0; i < 12; i++) {
+      coupon += Math.floor(Math.random() * 10);
+    }
+    alert(coupon);
+  }
+
+  document.getElementById("image4").addEventListener("click", generateCoupon);
+
+</script>
+
+
+<script>
+let currentImage = 1;
+
+const image1 = document.getElementById("image1");
+const image2 = document.getElementById("image2");
+const image3 = document.getElementById("image3");
+const image4 = document.getElementById("image4");
+
+image1.addEventListener("click", function() {
+  if (currentImage === 1) {
+    this.style.pointerEvents = "none";
+    currentImage = 2;
+  }
+});
+
+image2.addEventListener("click", function() {
+  if (currentImage === 2) {
+    this.style.pointerEvents = "none";
+    currentImage = 3;
+  }
+});
+
+image3.addEventListener("click", function() {
+  if (currentImage === 3) {
+    this.style.pointerEvents = "none";
+    currentImage = 4;
+  }
+});
+
+
+</script>
+
+<script>
+    let clicks = 0;
+    let sum = 0;
+    let attempts = 0;
+    
+    const dice = document.getElementById("dice");
+    const result = document.getElementById("result");
+    
+    image3.addEventListener("click", function() {
+      if (clicks === 0) {
+        dice.style.display = "block";
+      }
+    });
+    
+    document.getElementById("dice").addEventListener("click", function() {
+      if (clicks < 3) {
+        let roll = Math.floor(Math.random() * 6) + 1;
+        sum += roll;
+        clicks++;
+    
+        if (clicks === 3) {
+          if (sum > 10) {
+            image4.style.pointerEvents = "auto";
+          } else if (attempts === 0) {
+            attempts++;
+            clicks = 0;
+            sum = 0;
+          } else {
+            result.innerHTML = "Bad luck";
+          }
+        }
+      }
+    });
+    
+    image4.addEventListener("click", function() {
+      if (sum > 10) {
+        this.style.pointerEvents = "none";
+        result.innerHTML = "Congratulations! You can generate a coupon";
+      }
+    });
+    </script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
